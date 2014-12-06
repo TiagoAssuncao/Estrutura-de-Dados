@@ -22,6 +22,7 @@ typedef struct noArvore
 	struct noArvore *noEsquerdoDoPai;
 }noArvore;
 
+/*Inicializa todos os nos da arvore*/
 noArvore *setNovoNo(noArvore *novoNo, const unsigned int novoValorParaInserir)
 {
 	novoNo = malloc(sizeof(noArvore));
@@ -65,6 +66,7 @@ void insereNovoNo(noArvore *busca, const unsigned int novoValorParaInserir)
 			{
 				if(noEsquerdaBuscaIgualNULL)
 				{
+					novoNo = setNovoNo(novoNo, novoValorParaInserir);
 			
 					busca->noEsquerdoDoPai = novoNo;
 				}else
@@ -90,13 +92,15 @@ int profundidadeTotalDaArvore(const noArvore* busca)
 	int profundidadeDaArvore = 0;
 	int alturaDaArvorePelaEsquerda = 0;
 	int alturaDaArvorePelaDireita = 0;
+	int alturaDireitaMaiorQueEsquerda = 0; 
 	
 	if(busca)
 	{
 		alturaDaArvorePelaEsquerda = profundidadeTotalDaArvore(busca->noEsquerdoDoPai);
 		alturaDaArvorePelaDireita = profundidadeTotalDaArvore(busca->noDireitoDoPai);
 		
-		if(alturaDaArvorePelaEsquerda > alturaDaArvorePelaDireita)
+		alturaDireitaMaiorQueEsquerda =	(alturaDaArvorePelaEsquerda > alturaDaArvorePelaDireita);
+		if(alturaDireitaMaiorQueEsquerda)
 		{
 			profundidadeDaArvore = alturaDaArvorePelaEsquerda + INCREMENTO_ALTURA;		
 		}
@@ -133,7 +137,7 @@ int numeroTermosArvore(noArvore *busca)
 	if(busca)
 	{
 		numeroTermos = numeroTermosArvore(busca->noDireitoDoPai) 
-		+ numeroTermosArvore(busca->noEsquerdoDoPai) + INCREMENTO_NUMERO_TERMO;
+					 + numeroTermosArvore(busca->noEsquerdoDoPai) + INCREMENTO_NUMERO_TERMO;
 	}else
 	{
 		numeroTermos = 0;
@@ -150,7 +154,7 @@ int calculaSomaDosTermos(const noArvore *busca)
 	if(busca)
 	{
 		somaTermosArvore = calculaSomaDosTermos(busca->noDireitoDoPai) 
-		+ calculaSomaDosTermos(busca->noEsquerdoDoPai) + busca->valor;
+						 + calculaSomaDosTermos(busca->noEsquerdoDoPai) + busca->valor;
 	}
 	else
 	{
