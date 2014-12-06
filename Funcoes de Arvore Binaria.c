@@ -11,18 +11,18 @@ Compilador utilizado: gcc -g -o 2testArvore -W -Wall -pedantic -ansi -I. 2testAr
 #include <stdlib.h>
 #define INCREMENTO_ALTURA 1
 #define INCREMENTO_NUMERO_TERMO 1
-#define CONDICAO_DE_PARADA -1
+#define CONDICAO_DE_PARADA 999
 #define SET_VALOR_RAIZ 0
 
 /*Estrutura dos termos(nos)*/
 typedef struct noArvore
 {
-	int valor;
+	unsigned int valor;
 	struct noArvore *noDireitoDoPai;
 	struct noArvore *noEsquerdoDoPai;
 }noArvore;
 
-noArvore *setNovoNo(noArvore *novoNo, int novoValorParaInserir)
+noArvore *setNovoNo(noArvore *novoNo, const unsigned int novoValorParaInserir)
 {
 	novoNo = malloc(sizeof(noArvore));
 	novoNo->valor = novoValorParaInserir;
@@ -36,16 +36,22 @@ noArvore *setNovoNo(noArvore *novoNo, int novoValorParaInserir)
 Insere um novo no na arvore, de maneira recursiva, percorrendo a arvore a procura do no
 que deve ser inserido, ate passa a referencia do pai que tera o novo no inserido
 */
-void insereNovoNo(noArvore *busca, int novoValorParaInserir)
+void insereNovoNo(noArvore *busca, const unsigned int novoValorParaInserir)
 {
 	noArvore *novoNo = NULL;
+	int novoValorDiferenteCondicaoParada = (novoValorParaInserir != CONDICAO_DE_PARADA);
+	int novoValorDiferenteValorSetado = (busca->valor != SET_VALOR_RAIZ);
+	int novoValorMaiorValorPresenteNo = (novoValorParaInserir > busca->valor);
+	int novoValorMenorValorPresenteNo = (novoValorParaInserir < busca->valor);
+	int noDireitaBuscaIgualNULL = (busca->noDireitoDoPai == NULL);
+	int noEsquerdaBuscaIgualNULL = (busca->noEsquerdoDoPai == NULL);
 
-	if(novoValorParaInserir != CONDICAO_DE_PARADA)
+	if(novoValorDiferenteCondicaoParada)
 	{
-		if(busca->valor != SET_VALOR_RAIZ){
-			if(novoValorParaInserir > busca->valor)
+		if(novoValorDiferenteValorSetado){
+			if(novoValorMaiorValorPresenteNo)
 			{
-				if(busca->noDireitoDoPai == NULL)
+				if(noDireitaBuscaIgualNULL)
 				{
 					novoNo = setNovoNo(novoNo, novoValorParaInserir);
 				
@@ -55,9 +61,9 @@ void insereNovoNo(noArvore *busca, int novoValorParaInserir)
 					insereNovoNo(busca->noDireitoDoPai, novoValorParaInserir);
 				}
 			}
-			else if(novoValorParaInserir < busca->valor)
+			else if(novoValorMenorValorPresenteNo)
 			{
-				if(busca->noEsquerdoDoPai == NULL)
+				if(noEsquerdaBuscaIgualNULL)
 				{
 			
 					busca->noEsquerdoDoPai = novoNo;
@@ -79,7 +85,7 @@ void insereNovoNo(noArvore *busca, int novoValorParaInserir)
 }
 
 /*Percorre a arvore recursivamente a fim de obter sua profundidade*/
-int profundidadeTotalDaArvore(noArvore* busca)
+int profundidadeTotalDaArvore(const noArvore* busca)
 {
 	int profundidadeDaArvore = 0;
 	int alturaDaArvorePelaEsquerda = 0;
@@ -109,7 +115,7 @@ int profundidadeTotalDaArvore(noArvore* busca)
 
 
 /*Percorre a arvore recursivamente exibindo os valores inteiros em ordem*/
-void imprimeValoresArvore(noArvore *busca)
+void imprimeValoresArvore(const noArvore *busca)
 {
 	if(busca)
 	{
@@ -137,7 +143,7 @@ int numeroTermosArvore(noArvore *busca)
 }
 
 /*Percorre a arvore recursivamente retornando a soma dos valores dos nos*/
-int calculaSomaDosTermos(noArvore *busca)
+int calculaSomaDosTermos(const noArvore *busca)
 {
 	int somaTermosArvore = 0;
 
@@ -168,7 +174,7 @@ noArvore *recebeValores(noArvore *raizDaArvore)
 	int novoValorParaInserir = 0;
 
 	printf("Entre com os valores da arvore por vez\n");
-	printf("Para encerrar a insercao de valores, insira o valor -1\n");
+	printf("Para encerrar a insercao de valores, insira o valor 999\n");
 	scanf("%d", &novoValorParaInserir);
 	insereNovoNo(raizDaArvore, novoValorParaInserir);
 	
